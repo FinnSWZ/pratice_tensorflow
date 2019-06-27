@@ -1,0 +1,41 @@
+import tensorflow as tf
+import numpy as np
+
+#define layers
+def add_layer(inputs, input_size, output_size, activation_function = None):
+    Weights = tf.Variable(tf.random.normal([output_size,input_size]))
+    biases = tf.Variable(tf.random_normal([output_size,1]))
+    h = tf.matmul(Weights,inputs)+biases
+
+    if activation_function is None:
+        outputs = h
+    else:
+        outputs = activation_function(h)
+    return outputs,Weights
+
+#create vitual data
+x_data = np.linspace(-1,1,300).reshape([3,100]) #Todo
+y_data = np.linspace(10,20,100).reshape([1,100]) #Todo
+
+xs = tf.placeholder(dtype=tf.float32, shape=(3,None)) #todo
+ys = tf.placeholder(dtype=tf.float32,shape=(1,None))  #Todo
+
+#Constructe a 3-5-1 neural network
+L1,W1 = add_layer(xs,3,5,activation_function=tf.nn.relu) #Todo
+prediction,W2 = add_layer(L1,5,1,activation_function=None)
+
+#loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction),reduction_indices = [0,1])) #Todo
+loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction)))
+train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+
+init = tf.global_variables_initializer()
+
+#train
+sess = tf.Session()
+sess.run(init)
+for i in range(1000):
+    sess.run(train_step,feed_dict={xs:x_data,ys:y_data})
+    if i%200 == 0:
+        print(sess.run(loss,feed_dict={xs:x_data,ys:y_data}))
+   
+
