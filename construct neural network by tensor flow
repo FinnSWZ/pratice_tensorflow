@@ -13,7 +13,7 @@ def add_layer(inputs, input_size, output_size, activation_function = None):
         outputs = activation_function(h)
     return outputs,Weights
 
-#create vitual data
+#create virtual data
 x_data = np.linspace(-1,1,300).reshape([3,100]) #Todo
 y_data = np.linspace(10,20,100).reshape([1,100]) #Todo
 
